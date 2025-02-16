@@ -1,6 +1,15 @@
+@import url('https://fonts.googleapis.com/css2?family=Chau+Philomene+One:ital@0;1&display=swap');
+
 html, body {
     margin: 0;
     padding: 0;
     height: 100%;
     overflow: hidden;
+    font-family: "Chau Philomene One", serif;
+}
+
+app-menu{
+    position: absolute;
+    width: 100%;
+    height: 100%;
 }
