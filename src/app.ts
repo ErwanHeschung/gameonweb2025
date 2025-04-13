@@ -58,13 +58,9 @@ window.addEventListener("DOMContentLoaded", () => {
             scene
         );
 
-        BABYLON.SceneLoader.AppendAsync("/models/sky.glb", "", scene).then(() => {
-            console.log("Skybox loaded successfully.");
-        }).catch((error) => {
-            console.error("Error loading skybox:", error);
-        });
-
-
+        initWorld(scene);
+        addSkybox(scene);
+        addMusic(scene);
 
         engine.runRenderLoop(() => {
             scene.render();
@@ -75,5 +71,44 @@ window.addEventListener("DOMContentLoaded", () => {
         });
     });
 });
+
+function addMusic(scene: BABYLON.Scene) {
+    const backgroundMusic = new BABYLON.Sound(
+        "BackgroundMusic",
+        "/music/background.mp3",
+        scene,
+        null,
+        {
+            loop: true,
+            autoplay: true,
+            volume: 0.5
+        }
+    );
+}
+
+function addSkybox(scene: BABYLON.Scene) {
+    BABYLON.SceneLoader.AppendAsync("/models/sky.glb", "", scene).then(() => {
+        const skybox = scene.getMeshByName("Skybox") as BABYLON.Mesh;
+        if (skybox) {
+            skybox.position = BABYLON.Vector3.Zero();
+            const scaleFactor = 2;
+            skybox.scaling = new BABYLON.Vector3(scaleFactor, scaleFactor, scaleFactor);
+            console.log("Skybox found and scaled.");
+        } else {
+            console.error("Skybox not found in the scene. Check the console for the actual mesh names.");
+        }
+    }).catch((error) => {
+        console.error("Error loading skybox:", error);
+    });
+}
+
+function initWorld(scene: BABYLON.Scene) {
+    BABYLON.SceneLoader.AppendAsync("/models/world.glb", "", scene).then(() => {
+        console.log("World loaded successfully.");
+    }
+    ).catch((error) => {
+        console.error("Error loading world:", error);
+    });
+}
 
 new App();
