@@ -2,6 +2,7 @@ const path = require("path");
 const fs = require("fs");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const appDirectory = fs.realpathSync(process.cwd());
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
     entry: path.resolve(appDirectory, "src/app.ts"), //path to the main .ts file
