@@ -110,6 +110,11 @@ export function loadCharacter(scene: BABYLON.Scene, canvas: HTMLCanvasElement, A
         scene.onBeforeRenderObservable.add(() => {
             if (!playerMesh) return;
 
+            if (playerMesh.position.y < -20) {
+                playerMesh.physicsImpostor!.setLinearVelocity(BABYLON.Vector3.Zero());
+                playerMesh.position = new BABYLON.Vector3(0, 5, 0);
+            }
+
             visualContainer.rotation.y = +playerYaw;
 
             const camOffset = new BABYLON.Vector3(
