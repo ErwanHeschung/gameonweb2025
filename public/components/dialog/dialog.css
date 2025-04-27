@@ -1,0 +1,44 @@
+.dialog-box {
+  position: absolute;
+  bottom: 10%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.575);
+  padding: 1em 2em;
+  border-radius: 1em;
+  color: white;
+  width: 50%;
+  text-align: left;
+  display: none;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1rem;
+  z-index: 9999;
+  font-family: 'Poppins', sans-serif;
+}
+
+.speaker {
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+
+.text {
+  font-size: 1rem;
+}
+
+
+.next {
+  align-self: flex-end;
+  padding: 0.5rem 1rem;
+  background-color: rgba(82, 45, 250, 0.8);
+  border: none;
+  border-radius: 0.5rem;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.next:hover {
+  background-color: rgba(54, 30, 164, 0.8);
+}

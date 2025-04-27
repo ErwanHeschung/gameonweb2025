@@ -13,5 +13,6 @@ export function addMusic(scene: BABYLON.Scene): BABYLON.Sound {
         }
     );
 
+    
     return music;
 }
