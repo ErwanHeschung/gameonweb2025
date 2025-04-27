@@ -13,8 +13,7 @@ window.addEventListener('DOMContentLoaded', () => {
         { speaker: "", text: "vanish behind silence." },
         { speaker: "", text: "But when sleep takes hold," },
         { speaker: "", text: "and the world blurs into shadows..." },
-        { speaker: "", text: "I step into the one place left untouched." },
-        { speaker: "", text: "Dreamscape." }
+        { speaker: "", text: "I step into the one place left untouched." }
     ];
 
     menu.addEventListener('start-dialog', () => {
@@ -24,7 +23,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
         dialog.addEventListener('dialog-finished', () => {
             console.log('Dialog finished! Now launching game.');
-            window.location.href = 'game.html'; // NOW launch game
-        }, { once: true }); // only run once
+            window.location.href = 'game.html';
+        }, { once: true });
     });
 });

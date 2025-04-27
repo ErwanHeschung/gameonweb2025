@@ -11,44 +11,58 @@ import { loadCharacter, updatePlayerMovement } from "./player/Player";
 
 
 window.addEventListener("DOMContentLoaded", async () => {
-    
+    const splash = document.getElementById("splash");
     const canvas = document.getElementById("gameCanvas") as HTMLCanvasElement | null;
+
     if (!canvas) {
         console.error("Canvas not found!");
         return;
     }
 
-    canvas.style.cursor = "none";
-    canvas.addEventListener("click", () => {
-        if (canvas.requestPointerLock) {
-            canvas.requestPointerLock();
+    setTimeout(async () => {
+        if (splash) {
+            splash.style.transition = "opacity 1s";
+            splash.style.opacity = "0";
+            setTimeout(() => {
+                splash.style.display = "none";
+            }, 1000);
         }
-    });
 
-    const engine = new BABYLON.Engine(canvas, true);
-    const scene = new BABYLON.Scene(engine);
+        canvas.style.cursor = "none";
+        canvas.addEventListener("click", () => {
+            if (canvas.requestPointerLock) {
+                canvas.requestPointerLock();
+            }
+        });
 
-    const ImportedAmmo = await Ammo.call({});
-    scene.enablePhysics(new BABYLON.Vector3(0, -20, 0), new AmmoJSPlugin(true, ImportedAmmo));
+        const engine = new BABYLON.Engine(canvas, true);
+        engine.displayLoadingUI = () => { };
+        engine.hideLoadingUI();
 
-    const light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(1, 1, 0), scene);
-    const music = addMusic(scene);
+        const scene = new BABYLON.Scene(engine);
+        const ImportedAmmo = await Ammo.call({});
+        scene.enablePhysics(new BABYLON.Vector3(0, -20, 0), new AmmoJSPlugin(true, ImportedAmmo));
 
-    Promise.all([
-        initWorld(scene),
-        loadCharacter(scene, canvas,ImportedAmmo),
-        addSkybox(scene)
-    ])
-        .then(() => {
-            engine.runRenderLoop(() => {
-                updatePlayerMovement(scene);
-                music.play();
-                scene.render();
-            });
-        })
-        .catch(err => console.error("Fatal init error:", err));
+        const light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(1, 1, 0), scene);
+        const music = addMusic(scene);
 
-    window.addEventListener("resize", () => {
-        engine.resize();
-    });
+        Promise.all([
+            initWorld(scene),
+            loadCharacter(scene, canvas, ImportedAmmo),
+            addSkybox(scene)
+        ])
+            .then(() => {
+                engine.runRenderLoop(() => {
+                    updatePlayerMovement(scene);
+                    music.play();
+                    scene.render();
+                });
+            })
+            .catch(err => console.error("Fatal init error:", err));
+
+        window.addEventListener("resize", () => {
+            engine.resize();
+        });
+
+    }, 1500);
 });
