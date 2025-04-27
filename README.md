@@ -1,6 +1,14 @@
+# Présentation du projet 
+
+//TODO
+
+# Prérequis 
+
+- NodeJS
+
 # Lancement du projet 
 
-installer les dépendances
+A la racine du projet, installez les dépendances
 
 ```
 npm install
@@ -16,3 +24,17 @@ npm run build
 ```
 
 Hosted website : https://dreamscape-a200c.web.app
+
+# Déploiment
+
+Le déploiment est fait automatiquement par github action via firebase lors d'un push sur main, aucune autre action estnécessaire 
+
+# Resources externes
+
+Musique du jeu : 
+
+Steffen Daum - Awakening 
+https://youtu.be/gjSNbiowp38
+
+Animations : https://www.mixamo.com
+
