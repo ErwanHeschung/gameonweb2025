@@ -1,7 +1,7 @@
 import * as BABYLON from "@babylonjs/core";
 
-export function addMusic(scene: BABYLON.Scene): void {
-    new BABYLON.Sound(
+export function addMusic(scene: BABYLON.Scene): BABYLON.Sound {
+    const music = new BABYLON.Sound(
         "BackgroundMusic",
         "/music/background.mp3",
         scene,
@@ -12,4 +12,6 @@ export function addMusic(scene: BABYLON.Scene): void {
             volume: 0.5,
         }
     );
+
+    return music;
 }

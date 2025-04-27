@@ -5,6 +5,14 @@ export let playerMesh: BABYLON.Mesh | null = null;
 
 const mouseSensitivity = 0.005;
 let playerYaw = 0;
+let currentAnimationName = "";
+const animationGroups: { [key: string]: BABYLON.AnimationGroup } = {};
+
+let previousAnimation: BABYLON.AnimationGroup | null = null;
+let animationTransitionDuration = 0.3;
+let animationTransitionElapsed = 0;
+let isTransitioning = false;
+let isJumping = false;
 
 export function setupMouseRotation(canvas: HTMLCanvasElement) {
     canvas.onclick = () => {
@@ -16,8 +24,7 @@ export function setupMouseRotation(canvas: HTMLCanvasElement) {
             playerYaw -= deltaX * mouseSensitivity;
 
             if (playerMesh) {
-                // Apply rotation to the collider as well
-                playerMesh.rotation.y = playerYaw;  // Rotate the collider mesh
+                playerMesh.rotation.y = playerYaw;
             }
         }
     });
@@ -27,6 +34,12 @@ export function loadCharacter(scene: BABYLON.Scene, canvas: HTMLCanvasElement, A
     return BABYLON.SceneLoader.ImportMeshAsync(
         "", "/models/character/", "character.glb", scene
     ).then((result) => {
+        result.animationGroups.forEach((animGroup) => {
+            const animName = animGroup.name.toLowerCase();
+            console.log(`🎞️ Animation Group Name: ${animName}`);
+            animationGroups[animName] = animGroup;
+        });
+
         const visualMeshes = result.meshes.filter(
             mesh => mesh instanceof BABYLON.Mesh && mesh.isVisible && mesh.getTotalVertices() > 0
         ) as BABYLON.Mesh[];
@@ -106,6 +119,21 @@ export function loadCharacter(scene: BABYLON.Scene, canvas: HTMLCanvasElement, A
             );
             cam.position = playerMesh.position.add(camOffset);
             cam.setTarget(playerMesh.position.add(new BABYLON.Vector3(0, 2, 0)));
+
+            if (isTransitioning && previousAnimation && animationGroups[currentAnimationName]) {
+                animationTransitionElapsed += scene.getEngine().getDeltaTime() / 1000; // time in seconds
+                let alpha = animationTransitionElapsed / animationTransitionDuration;
+                if (alpha >= 1) {
+                    alpha = 1;
+                    previousAnimation.stop();
+                    previousAnimation = null;
+                    isTransitioning = false;
+                }
+
+                const currentAnimGroup = animationGroups[currentAnimationName]!;
+                currentAnimGroup.setWeightForAllAnimatables(alpha);
+                previousAnimation?.setWeightForAllAnimatables(1.0 - alpha);
+            }
         });
 
         console.log("Character loaded with dynamic box collider.");
@@ -151,9 +179,59 @@ export function updatePlayerMovement(scene: BABYLON.Scene): void {
         newYVelocity = 7;
     }
 
+    if (inputManager.isKeyPressed(" ") && isOnGround) {
+        playAnimation("jump", false);
+    }
+    if (!isJumping) {
+        if (move.lengthSquared() > 0) {
+            playAnimation("running");
+        } else {
+            playAnimation("idle");
+        }
+    }
+
     if (move.lengthSquared() > 0) {
         move = move.normalize().scale(moveSpeed);
     }
 
     impostor.setLinearVelocity(new BABYLON.Vector3(move.x, newYVelocity, move.z));
+}
+
+function playAnimation(name: string, loop: boolean = true) {
+    if (currentAnimationName === name) return;
+
+    const newAnim = animationGroups[name];
+    if (!newAnim) {
+        console.warn(`Animation ${name} not found.`);
+        return;
+    }
+
+    if (name === "jump" && !loop) {
+        isJumping = true;
+
+        newAnim.onAnimationGroupEndObservable.addOnce(() => {
+            newAnim.pause();
+            isJumping = false;
+        });
+    }   
+
+    if (previousAnimation) {
+        previousAnimation.stop();
+    }
+
+    previousAnimation = animationGroups[currentAnimationName] || null;
+    currentAnimationName = name;
+
+    newAnim.reset();
+    newAnim.play(loop); 
+    newAnim.setWeightForAllAnimatables(0);
+
+    animationTransitionElapsed = 0;
+    isTransitioning = true;
+
+    if (name === "jump" && !loop) {
+        newAnim.onAnimationGroupEndObservable.addOnce(() => {
+            newAnim.pause();
+        });
+    }
 }
