@@ -1,18 +1,14 @@
 import * as BABYLON from "@babylonjs/core";
 
-export function addMusic(scene: BABYLON.Scene): BABYLON.Sound {
-    const music = new BABYLON.Sound(
-        "BackgroundMusic",
-        "/music/background.mp3",
-        scene,
-        null,
-        {
-            loop: true,
-            autoplay: true,
-            volume: 0.5,
-        }
-    );
+export async function addMusic(scene: BABYLON.Scene): Promise<void> {
+    const audioEngine = await BABYLON.CreateAudioEngineAsync();
+    await audioEngine.unlockAsync();
 
-    
-    return music;
+    const music = await BABYLON.CreateSoundAsync("BackgroundMusic", "/music/background.mp3", {
+        loop: true,
+        autoplay: true,
+        volume: 0.5
+    });
+
+    music.play();
 }

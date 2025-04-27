@@ -44,7 +44,6 @@ window.addEventListener("DOMContentLoaded", async () => {
         scene.enablePhysics(new BABYLON.Vector3(0, -20, 0), new AmmoJSPlugin(true, ImportedAmmo));
 
         const light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(1, 1, 0), scene);
-        const music = addMusic(scene);
 
         Promise.all([
             initWorld(scene),
@@ -52,9 +51,9 @@ window.addEventListener("DOMContentLoaded", async () => {
             addSkybox(scene)
         ])
             .then(() => {
+                addMusic(scene);
                 engine.runRenderLoop(() => {
                     updatePlayerMovement(scene);
-                    music.play();
                     scene.render();
                 });
             })
@@ -66,3 +65,4 @@ window.addEventListener("DOMContentLoaded", async () => {
 
     }, 1500);
 });
+

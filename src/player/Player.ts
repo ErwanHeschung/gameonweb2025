@@ -21,7 +21,7 @@ export function setupMouseRotation(canvas: HTMLCanvasElement) {
     canvas.addEventListener("pointermove", (e) => {
         if (document.pointerLockElement === canvas) {
             const deltaX = e.movementX;
-            playerYaw -= deltaX * mouseSensitivity;
+            playerYaw += deltaX * mouseSensitivity;
 
             if (playerMesh) {
                 playerMesh.rotation.y = playerYaw;
