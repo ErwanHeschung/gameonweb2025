@@ -119,7 +119,7 @@ export function loadCharacter(scene: BABYLON.Scene, canvas: HTMLCanvasElement, A
 
             const camOffset = new BABYLON.Vector3(
                 Math.sin(playerYaw + Math.PI) * 10,
-                4,
+                3,
                 Math.cos(playerYaw + Math.PI) * 10
             );
             cam.position = playerMesh.position.add(camOffset);
