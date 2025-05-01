@@ -3,8 +3,6 @@ import * as BABYLON from "@babylonjs/core";
 export function initWorld(scene: BABYLON.Scene): Promise<void> {
     return BABYLON.SceneLoader.AppendAsync("/models/world.glb", "", scene)
         .then(() => {
-            scene.debugLayer.show();
-
             scene.meshes.forEach((mesh) => {
                 if (!mesh.physicsImpostor && mesh.getTotalVertices() > 0) {
 
