@@ -8,11 +8,17 @@ import { initWorld } from "./World";
 import { addSkybox } from "./Skybox";
 import { addMusic } from "./Audio";
 import { loadCharacter, updatePlayerMovement } from "./player/Player";
+import { inputManager } from "./player/InputManager";
 
 
 window.addEventListener("DOMContentLoaded", async () => {
     const splash = document.getElementById("splash");
     const canvas = document.getElementById("gameCanvas") as HTMLCanvasElement | null;
+
+    document.getElementById("layoutSelect")?.addEventListener("change", (e) => {
+        const layout = (e.target as HTMLSelectElement).value;
+        inputManager.setLayout(layout as "QWERTY" | "AZERTY");
+    });
 
     if (!canvas) {
         console.error("Canvas not found!");
@@ -52,6 +58,7 @@ window.addEventListener("DOMContentLoaded", async () => {
         ])
             .then(() => {
                 addMusic(scene);
+                
                 engine.runRenderLoop(() => {
                     updatePlayerMovement(scene);
                     scene.render();

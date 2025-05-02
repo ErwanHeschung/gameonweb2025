@@ -163,10 +163,10 @@ export function updatePlayerMovement(scene: BABYLON.Scene): void {
     const right = new BABYLON.Vector3(forward.z, 0, -forward.x);
     let move = BABYLON.Vector3.Zero();
 
-    if (inputManager.isKeyPressed("z")) move = move.add(forward);
-    if (inputManager.isKeyPressed("s")) move = move.subtract(forward);
-    if (inputManager.isKeyPressed("d")) move = move.add(right);
-    if (inputManager.isKeyPressed("q")) move = move.subtract(right);
+    if (inputManager.isActionPressed("forward")) move = move.add(forward);
+    if (inputManager.isActionPressed("backward")) move = move.subtract(forward);
+    if (inputManager.isActionPressed("right")) move = move.add(right);
+    if (inputManager.isActionPressed("left")) move = move.subtract(right);
 
     let newYVelocity = currentVel.y;
 
@@ -180,11 +180,11 @@ export function updatePlayerMovement(scene: BABYLON.Scene): void {
 
     const isOnGround = rayHit?.hit ?? false;
 
-    if (inputManager.isKeyPressed(" ") && isOnGround) {
+    if (inputManager.isActionPressed("jump") && isOnGround) {
         newYVelocity = 7;
     }
 
-    if (inputManager.isKeyPressed(" ") && isOnGround) {
+    if (inputManager.isActionPressed("jump") && isOnGround) {
         playAnimation("jump", false);
     }
     if (!isJumping) {
